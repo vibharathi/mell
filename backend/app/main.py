@@ -1,0 +1,35 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from .db.database import client
+
+app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.on_event("startup")
+def startup_db_client():
+    try:
+        client.admin.command('ping')
+        print("Successfully connected to MongoDB")
+    except Exception as e:
+        print(f"Error connecting to MongoDB: {e}")
+
+
+@app.on_event("shutdown")
+def shutdown_db_client():
+    client.close()
+
+@app.get("/api/v1/health")
+def health_check():
+    return {"status": "ok"}
