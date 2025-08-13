@@ -32,3 +32,9 @@ class UserResponse(BaseModel):
 
     class Config:
         populate_by_name = True
+
+class UserCreateSchema(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    admin_secret: Optional[str] = None

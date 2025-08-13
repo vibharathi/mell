@@ -1,13 +1,14 @@
 import os
-from pymongo import MongoClient
+from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("MONGO_DETAILS")
+print(f"DATABASE_URL: {DATABASE_URL}")
 
-client = MongoClient(DATABASE_URL)
+client = AsyncIOMotorClient(DATABASE_URL)
 db = client.get_database("MELL")
 
-def get_db():
+async def get_db():
     return db

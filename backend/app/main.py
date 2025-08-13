@@ -36,4 +36,5 @@ def shutdown_db_client():
 
 @app.get("/api/v1/health")
 def health_check():
+    print("Health check endpoint reached")
     return {"status": "ok"}

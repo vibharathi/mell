@@ -32,9 +32,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const storedToken = localStorage.getItem('token');
     if (storedToken) {
       setToken(storedToken);
-      // You would typically fetch the user profile here using the token
-      // For now, we'll just simulate it
-      // fetchUserProfile(storedToken);
+      fetchUserProfile(storedToken);
     }
     setLoading(false);
   }, []);
@@ -42,7 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (newToken: string) => {
     setToken(newToken);
     localStorage.setItem('token', newToken);
-    // fetchUserProfile(newToken);
+    fetchUserProfile(newToken);
     router.push('/dashboard');
   };
 
@@ -53,24 +51,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     router.push('/login');
   };
 
-  // const fetchUserProfile = async (token: string) => {
-  //   try {
-  //     const res = await fetch('/api/v1/users/me', {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     if (res.ok) {
-  //       const userData = await res.json();
-  //       setUser(userData);
-  //     } else {
-  //       logout();
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to fetch user profile', error);
-  //     logout();
-  //   }
-  // };
+  const fetchUserProfile = async (token: string) => {
+    try {
+      const res = await fetch('http://localhost:8002/api/v1/users/me', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.ok) {
+        const userData = await res.json();
+        setUser(userData);
+      } else {
+        logout();
+      }
+    } catch (error) {
+      console.error('Failed to fetch user profile', error);
+      logout();
+    }
+  };
 
   return (
     <AuthContext.Provider value={{ user, token, loading, login, logout }}>
