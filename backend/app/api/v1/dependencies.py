@@ -28,3 +28,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
     user["_id"] = str(user["_id"])
     return UserSchema(**user)
+
+
+async def get_current_admin_user(
+    current_user: UserSchema = Depends(get_current_user),
+):
+    if current_user.role != "Admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user does not have enough privileges",
+        )
+    return current_user

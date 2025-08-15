@@ -1,0 +1,64 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from typing import List
+from app.schemas.inventory_schema import EquipmentItem
+from app.services import inventory_service
+from app.api.v1.dependencies import get_current_admin_user, get_current_user
+from app.schemas.user_schema import UserSchema
+
+router = APIRouter(prefix="/api/v1/inventory", tags=["Inventory"])
+
+
+@router.post("/", response_model=EquipmentItem)
+async def create_item(
+    item_data: EquipmentItem,
+    current_user: UserSchema = Depends(get_current_admin_user),
+):
+    created_item = await inventory_service.create_equipment_item(item_data)
+    if not created_item:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create equipment item",
+        )
+    return created_item
+
+
+@router.get("/", response_model=List[EquipmentItem])
+async def get_all_items(current_user: UserSchema = Depends(get_current_user)):
+    items = await inventory_service.get_all_equipment_items()
+    return items
+
+
+@router.get("/{item_id}", response_model=EquipmentItem)
+async def get_item(item_id: str):
+    item = await inventory_service.get_equipment_item(item_id)
+    if not item:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Equipment item not found"
+        )
+    return item
+
+
+@router.put("/{item_id}", response_model=EquipmentItem)
+async def update_item(
+    item_id: str,
+    item_data: EquipmentItem,
+    current_user: UserSchema = Depends(get_current_admin_user),
+):
+    updated_item = await inventory_service.update_equipment_item(item_id, item_data)
+    if not updated_item:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Equipment item not found"
+        )
+    return updated_item
+
+
+@router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_item(
+    item_id: str, current_user: UserSchema = Depends(get_current_admin_user)
+):
+    deleted = await inventory_service.delete_equipment_item(item_id)
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Equipment item not found"
+        )
+    return None
