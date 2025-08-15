@@ -46,23 +46,24 @@ export default function LoginPage() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!authContext) {
+      console.error("Auth context is not available");
+      // Handle this case appropriately, maybe show a generic error message
+      return;
+    }
+
     try {
-      if (authContext) {
-        const loginData = new URLSearchParams();
-        loginData.append("username", values.email);
-        loginData.append("password", values.password);
-        const { access_token } = await login(loginData);
-        authContext.login(access_token);
-      }
+      const { token } = await login({
+        username: values.email,
+        password: values.password,
+      });
+      authContext.login(token);
     } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.detail) {
-        form.setError("email", {
-          type: "manual",
-          message: error.response.data.detail,
-        });
-      } else {
-        console.error("Login failed", error);
-      }
+      // The new login function throws an error with a message
+      form.setError("email", {
+        type: "manual",
+        message: error.message || "An unexpected error occurred.",
+      });
     }
   }
 
