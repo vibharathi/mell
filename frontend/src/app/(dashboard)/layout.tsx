@@ -12,21 +12,13 @@ export default function DashboardLayout({
   const authContext = useContext(AuthContext);
   const router = useRouter();
 
-  if (!authContext) {
-    // This can happen if the component is rendered outside of AuthProvider
-    // You might want to handle this case, e.g., by redirecting or showing a message
-    return <div>Loading...</div>;
-  }
-
-  const { token, loading } = authContext;
-
   useEffect(() => {
-    if (!loading && !token) {
+    if (authContext && !authContext.loading && !authContext.token) {
       router.push('/login');
     }
-  }, [loading, token, router]);
+  }, [authContext, router]);
 
-  if (loading || !token) {
+  if (!authContext || authContext.loading || !authContext.token) {
     return <div>Loading...</div>;
   }
 

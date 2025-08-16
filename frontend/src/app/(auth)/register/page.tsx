@@ -56,21 +56,21 @@ export default function RegisterPage() {
       await register(values);
       // Log in the user directly after registration
       if (authContext) {
-        const loginData = new URLSearchParams();
-        loginData.append("username", values.email);
-        loginData.append("password", values.password);
-        const { access_token } = await login(loginData);
-        authContext.login(access_token);
-      }
-    } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.detail) {
-        form.setError("email", {
-          type: "manual",
-          message: error.response.data.detail,
+        const { token } = await login({
+          username: values.email,
+          password: values.password,
         });
-      } else {
-        console.error("Registration failed", error);
+        authContext.login(token);
       }
+    } catch (error) {
+      let errorMessage = "An unexpected error occurred.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      form.setError("email", {
+        type: "manual",
+        message: errorMessage,
+      });
     }
   }
 

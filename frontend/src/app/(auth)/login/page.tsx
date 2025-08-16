@@ -57,12 +57,15 @@ export default function LoginPage() {
         username: values.email,
         password: values.password,
       });
-      authContext.login(token);
-    } catch (error: any) {
-      // The new login function throws an error with a message
+      await authContext.login(token);
+    } catch (error) {
+      let errorMessage = "An unexpected error occurred.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
       form.setError("email", {
         type: "manual",
-        message: error.message || "An unexpected error occurred.",
+        message: errorMessage,
       });
     }
   }

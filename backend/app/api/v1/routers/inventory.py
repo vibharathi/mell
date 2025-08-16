@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
-from app.schemas.inventory_schema import EquipmentItem
+from app.schemas.inventory_schema import EquipmentItem, EquipmentItemCreate, EquipmentItemUpdate
 from app.services import inventory_service
 from app.api.v1.dependencies import get_current_admin_user, get_current_user
 from app.schemas.user_schema import UserSchema
@@ -8,9 +8,9 @@ from app.schemas.user_schema import UserSchema
 router = APIRouter(prefix="/api/v1/inventory", tags=["Inventory"])
 
 
-@router.post("/", response_model=EquipmentItem)
+@router.post("/", response_model=EquipmentItem, response_model_by_alias=False)
 async def create_item(
-    item_data: EquipmentItem,
+    item_data: EquipmentItemCreate,
     current_user: UserSchema = Depends(get_current_admin_user),
 ):
     created_item = await inventory_service.create_equipment_item(item_data)
@@ -22,14 +22,14 @@ async def create_item(
     return created_item
 
 
-@router.get("/", response_model=List[EquipmentItem])
+@router.get("/", response_model=List[EquipmentItem], response_model_by_alias=False)
 async def get_all_items(current_user: UserSchema = Depends(get_current_user)):
     items = await inventory_service.get_all_equipment_items()
     return items
 
 
-@router.get("/{item_id}", response_model=EquipmentItem)
-async def get_item(item_id: str):
+@router.get("/{item_id}", response_model=EquipmentItem, response_model_by_alias=False)
+async def get_item(item_id: str, current_user: UserSchema = Depends(get_current_user)):
     item = await inventory_service.get_equipment_item(item_id)
     if not item:
         raise HTTPException(
@@ -38,10 +38,10 @@ async def get_item(item_id: str):
     return item
 
 
-@router.put("/{item_id}", response_model=EquipmentItem)
+@router.put("/{item_id}", response_model=EquipmentItem, response_model_by_alias=False)
 async def update_item(
     item_id: str,
-    item_data: EquipmentItem,
+    item_data: EquipmentItemUpdate,
     current_user: UserSchema = Depends(get_current_admin_user),
 ):
     updated_item = await inventory_service.update_equipment_item(item_id, item_data)

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
@@ -28,30 +28,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
-      fetchUserProfile(storedToken);
-    }
-    setLoading(false);
-  }, []);
-
-  const login = (newToken: string) => {
-    setToken(newToken);
-    localStorage.setItem('token', newToken);
-    fetchUserProfile(newToken);
-    router.push('/dashboard');
-  };
-
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');
     router.push('/login');
-  };
+  }, [router]);
 
-  const fetchUserProfile = async (token: string) => {
+  const fetchUserProfile = useCallback(async (token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me`, {
         headers: {
@@ -61,18 +45,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (res.ok) {
         const userData = await res.json();
         setUser(userData);
+        return userData;
       } else {
         logout();
+        return null;
       }
     } catch (error) {
       console.error('Failed to fetch user profile', error);
       logout();
     }
+  }, [logout]);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+      fetchUserProfile(storedToken);
+    }
+    setLoading(false);
+  }, [fetchUserProfile]);
+
+  const login = async (newToken: string) => {
+    setToken(newToken);
+    localStorage.setItem("token", newToken);
+    const user = await fetchUserProfile(newToken);
+    if (user && user.role === "Admin") {
+      router.push("/admin/inventory");
+    } else {
+      router.push("/dashboard");
+    }
   };
+
+
 
   return (
     <AuthContext.Provider value={{ user, token, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = React.useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };
