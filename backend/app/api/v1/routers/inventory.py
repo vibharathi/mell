@@ -23,8 +23,12 @@ async def create_item(
 
 
 @router.get("/", response_model=List[EquipmentItem], response_model_by_alias=False)
-async def get_all_items(current_user: UserSchema = Depends(get_current_user)):
-    items = await inventory_service.get_all_equipment_items()
+async def get_all_items(
+    name: str = None, category: str = None, status: str = None
+):
+    items = await inventory_service.get_all_equipment_items(
+        name=name, category=category, status=status
+    )
     return items
 
 

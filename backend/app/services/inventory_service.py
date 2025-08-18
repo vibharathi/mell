@@ -47,7 +47,14 @@ async def delete_equipment_item(item_id: str):
     return result.deleted_count > 0
 
 
-async def get_all_equipment_items():
+async def get_all_equipment_items(name: str = None, category: str = None, status: str = None):
     db = await get_db()
-    items = await db[INVENTORY_COLLECTION].find().to_list(1000)
+    query = {}
+    if name:
+        query["name"] = {"$regex": name, "$options": "i"}
+    if category:
+        query["category"] = category
+    if status:
+        query["status"] = status
+    items = await db[INVENTORY_COLLECTION].find(query).to_list(1000)
     return items

@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, GetJsonSchemaHandler
 from typing import Optional, Any
 from bson import ObjectId
 from pydantic_core import core_schema
+from enum import Enum
 
 class PyObjectId(ObjectId):
     @classmethod
@@ -20,10 +21,17 @@ class PyObjectId(ObjectId):
     ):
         return handler(core_schema.string_schema())
 
+class EquipmentCategory(str, Enum):
+    MOBILITY_EQUIPMENT = "Mobility Equipment"
+    BEDROOM_AIDS = "Bedroom Aids"
+    BATHROOM_AIDS = "Bathroom Aids"
+    SUPPORT_EQUIPMENT = "Support Equipment"
+    MISCELLANEOUS = "Miscellaneous"
+
 class EquipmentItemBase(BaseModel):
     name: str
     description: str
-    category: str
+    category: EquipmentCategory
     condition: str
     image_url: Optional[str] = None
     status: str

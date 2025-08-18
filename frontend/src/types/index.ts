@@ -1,8 +1,16 @@
+export enum EquipmentCategory {
+  MOBILITY_EQUIPMENT = "Mobility Equipment",
+  BEDROOM_AIDS = "Bedroom Aids",
+  BATHROOM_AIDS = "Bathroom Aids",
+  SUPPORT_EQUIPMENT = "Support Equipment",
+  MISCELLANEOUS = "Miscellaneous",
+}
+
 export interface EquipmentItem {
   id: string;
   name: string;
   description: string;
-  category: string;
+  category: EquipmentCategory;
   condition: string;
   image_url?: string;
   status: "Available" | "Unavailable";

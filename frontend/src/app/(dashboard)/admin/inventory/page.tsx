@@ -31,9 +31,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import { getInventory, createInventoryItem, updateInventoryItem, deleteInventoryItem } from "@/lib/api";
-import { EquipmentItem } from "@/types";
+import { EquipmentItem, EquipmentCategory } from "@/types";
 
 export default function AdminInventoryPage() {
   const { token } = useAuth();
@@ -68,7 +69,7 @@ export default function AdminInventoryPage() {
       const newItem = {
         name: formData.get("name") as string,
         description: formData.get("description") as string,
-        category: formData.get("category") as string,
+        category: formData.get("category") as EquipmentCategory,
         condition: formData.get("condition") as string,
         status: "Available" as "Available" | "Unavailable",
       };
@@ -89,7 +90,7 @@ export default function AdminInventoryPage() {
       const updatedItem = {
         name: formData.get("name") as string,
         description: formData.get("description") as string,
-        category: formData.get("category") as string,
+        category: formData.get("category") as EquipmentCategory,
         condition: formData.get("condition") as string,
         status: selectedItem.status,
       };
@@ -140,7 +141,18 @@ export default function AdminInventoryPage() {
                 </div>
                 <div>
                   <Label htmlFor="category">Category</Label>
-                  <Input id="category" name="category" required />
+                  <Select name="category">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(EquipmentCategory).map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label htmlFor="condition">Condition</Label>

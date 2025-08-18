@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .db.database import client
-from .api.v1.routers import auth, users, inventory
+from .api.v1.routers import auth, users, inventory, borrowing
 
 app = FastAPI()
 
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
 app.include_router(inventory.router)
+app.include_router(borrowing.router)
 
 origins = [
     "http://localhost:3000",

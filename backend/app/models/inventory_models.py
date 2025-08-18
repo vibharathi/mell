@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Enum
+from sqlalchemy.orm import relationship
 from app.db.database import Base
 import enum
 
@@ -16,3 +17,5 @@ class EquipmentItem(Base):
     condition = Column(String)
     image_url = Column(String, nullable=True)
     status = Column(Enum(ItemStatus), default=ItemStatus.AVAILABLE)
+
+    borrow_requests = relationship("BorrowRequest", back_populates="equipment_item")
