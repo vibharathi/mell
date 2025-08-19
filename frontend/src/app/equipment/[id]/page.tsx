@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/api";
+import { fetchWithAuth } from "@/lib/api";
 import { EquipmentItem } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
@@ -19,8 +19,10 @@ export default function EquipmentDetailPage() {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const response = await api.get(`/api/v1/inventory/${id}`);
-        setItem(response.data);
+        const data = await fetchWithAuth(
+          `http://127.0.0.1:8000/api/v1/inventory/${id}`
+        );
+        setItem(data);
       } catch (error) {
         console.error("Failed to fetch equipment item", error);
       }
@@ -58,20 +60,14 @@ export default function EquipmentDetailPage() {
           <p>
             <strong>Status:</strong> {item.status}
           </p>
-          <Button
-            className="mt-4"
-            onClick={handleRequestBorrow}
-            disabled={item.status !== "Available"}
-          >
-            <RequestBorrowDialog equipmentItemId={item.id}>
-              <Button
-                className="mt-4"
-                disabled={item.status !== "Available"}
-              >
-                Request to Borrow
-              </Button>
-            </RequestBorrowDialog>
-          </Button>
+          <RequestBorrowDialog equipmentItemId={item.id}>
+            <Button
+              className="mt-4"
+              disabled={item.status !== "Available"}
+            >
+              Request to Borrow
+            </Button>
+          </RequestBorrowDialog>
         </CardContent>
       </Card>
     </div>

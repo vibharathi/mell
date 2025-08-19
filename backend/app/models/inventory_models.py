@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from app.db.database import Base
 import enum
 
-class ItemStatus(str, enum.Enum):
+class EquipmentStatus(str, enum.Enum):
     AVAILABLE = "Available"
     UNAVAILABLE = "Unavailable"
 
@@ -16,6 +16,6 @@ class EquipmentItem(Base):
     category = Column(String)
     condition = Column(String)
     image_url = Column(String, nullable=True)
-    status = Column(Enum(ItemStatus), default=ItemStatus.AVAILABLE)
+    status = Column(Enum(EquipmentStatus), default=EquipmentStatus.AVAILABLE)
 
     borrow_requests = relationship("BorrowRequest", back_populates="equipment_item")

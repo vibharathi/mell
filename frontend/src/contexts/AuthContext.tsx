@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("token", newToken);
     const user = await fetchUserProfile(newToken);
     if (user && user.role === "Admin") {
-      router.push("/admin/inventory");
+      router.push("/admin");
     } else {
       router.push("/dashboard");
     }

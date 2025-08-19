@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
 import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
 import {
@@ -122,7 +123,11 @@ export default function AdminInventoryPage() {
       <main className="flex-1 p-4 md:p-6">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Inventory Management</h1>
-          <Dialog open={isCreateDialogOpen} onOpenChange={setCreateDialogOpen}>
+          <div className="flex gap-2">
+            <Link href="/admin">
+              <Button variant="outline">Dashboard</Button>
+            </Link>
+            <Dialog open={isCreateDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
               <Button>Create New Item</Button>
             </DialogTrigger>
@@ -161,7 +166,8 @@ export default function AdminInventoryPage() {
                 <Button type="submit">Create</Button>
               </form>
             </DialogContent>
-          </Dialog>
+            </Dialog>
+          </div>
         </div>
         <Table>
           <TableHeader>

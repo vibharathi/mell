@@ -24,3 +24,14 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface BorrowRequest {
+  id: string;
+  equipment_item_id: string;
+  borrower_id: string;
+  borrower_name: string;
+  borrower_email: string;
+  request_date: string;
+  return_date: string;
+  status: "Pending" | "Approved" | "Denied" | "Checked Out" | "Returned" | "Cancelled";
+}

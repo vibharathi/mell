@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { api } from "@/lib/api";
+import { getInventory } from "@/lib/api";
 import { EquipmentItem } from "@/types";
+import Link from "next/link";
 
 export default function EquipmentCatalog() {
   const [equipment, setEquipment] = useState<EquipmentItem[]>([]);
@@ -16,14 +17,15 @@ export default function EquipmentCatalog() {
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        const response = await api.get("/api/v1/inventory", {
-          params: {
-            name: searchTerm,
-            category,
-            status,
-          },
-        });
-        setEquipment(response.data);
+        const token = localStorage.getItem("token");
+        const data = await getInventory(token || "");
+        const filteredData = data.filter(
+          (item: EquipmentItem) =>
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (category ? item.category === category : true) &&
+            (status ? item.status === status : true)
+        );
+        setEquipment(filteredData);
       } catch (error) {
         console.error("Failed to fetch equipment", error);
       }
@@ -68,20 +70,22 @@ export default function EquipmentCatalog() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {equipment.map((item) => (
-          <Card key={item.id}>
-            <CardHeader>
-              <CardTitle>{item.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>{item.description}</p>
-              <p className="mt-4">
-                <strong>Category:</strong> {item.category}
-              </p>
-              <p>
-                <strong>Status:</strong> {item.status}
-              </p>
-            </CardContent>
-          </Card>
+          <Link href={`/equipment/${item.id}`} key={item.id}>
+            <Card>
+              <CardHeader>
+                <CardTitle>{item.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>{item.description}</p>
+                <p className="mt-4">
+                  <strong>Category:</strong> {item.category}
+                </p>
+                <p>
+                  <strong>Status:</strong> {item.status}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>

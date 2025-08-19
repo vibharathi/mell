@@ -33,7 +33,7 @@ async def get_all_items(
 
 
 @router.get("/{item_id}", response_model=EquipmentItem, response_model_by_alias=False)
-async def get_item(item_id: str, current_user: UserSchema = Depends(get_current_user)):
+async def get_item(item_id: str):
     item = await inventory_service.get_equipment_item(item_id)
     if not item:
         raise HTTPException(

@@ -53,11 +53,11 @@ export default function LoginPage() {
     }
 
     try {
-      const { token } = await login({
-        username: values.email,
-        password: values.password,
-      });
-      await authContext.login(token);
+      const formData = new FormData();
+      formData.append("username", values.email);
+      formData.append("password", values.password);
+      const { access_token } = await login(formData);
+      await authContext.login(access_token);
     } catch (error) {
       let errorMessage = "An unexpected error occurred.";
       if (error instanceof Error) {

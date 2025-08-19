@@ -56,11 +56,11 @@ export default function RegisterPage() {
       await register(values);
       // Log in the user directly after registration
       if (authContext) {
-        const { token } = await login({
-          username: values.email,
-          password: values.password,
-        });
-        authContext.login(token);
+        const formData = new FormData();
+        formData.append("username", values.email);
+        formData.append("password", values.password);
+        const { access_token } = await login(formData);
+        authContext.login(access_token);
       }
     } catch (error) {
       let errorMessage = "An unexpected error occurred.";
