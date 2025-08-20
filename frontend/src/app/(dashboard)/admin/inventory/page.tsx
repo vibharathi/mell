@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -119,7 +118,6 @@ export default function AdminInventoryPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
       <main className="flex-1 p-4 md:p-6">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Inventory Management</h1>
