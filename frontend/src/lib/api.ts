@@ -1,6 +1,7 @@
 import { BorrowRequest, User } from "@/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   const token = localStorage.getItem("token");
@@ -19,9 +20,7 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   return response.json();
 }
 
-export async function login(
-  data: FormData
-): Promise<{ access_token: string }> {
+export async function login(data: FormData): Promise<{ access_token: string }> {
   const response = await fetch(`${API_URL}/api/v1/auth/login`, {
     method: "POST",
     body: data,
@@ -79,7 +78,11 @@ export async function createInventoryItem(item: any, token: string) {
   });
 }
 
-export async function updateInventoryItem(id: string, item: any, token: string) {
+export async function updateInventoryItem(
+  id: string,
+  item: any,
+  token: string
+) {
   return fetchWithAuth(`${API_URL}/api/v1/inventory/${id}`, {
     method: "PUT",
     headers: {

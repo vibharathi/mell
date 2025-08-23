@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, API_URL } from "@/lib/api";
 import { EquipmentItem } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
@@ -19,11 +19,7 @@ export default function EquipmentDetailPage() {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const data = await fetchWithAuth(
-          `${
-            process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"
-          }/api/v1/inventory/${id}`
-        );
+        const data = await fetchWithAuth(`${API_URL}/api/v1/inventory/${id}`);
         setItem(data);
       } catch (error) {
         console.error("Failed to fetch equipment item", error);
