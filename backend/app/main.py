@@ -13,6 +13,7 @@ app.include_router(borrowing.router)
 origins = [
     "http://localhost:3000",
     "http://localhost:3001",
+    "https://mell-ps53.onrender.com",
 ]
 
 app.add_middleware(
