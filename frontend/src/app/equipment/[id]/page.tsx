@@ -20,7 +20,9 @@ export default function EquipmentDetailPage() {
     const fetchItem = async () => {
       try {
         const data = await fetchWithAuth(
-          `http://127.0.0.1:8000/api/v1/inventory/${id}`
+          `${
+            process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"
+          }/api/v1/inventory/${id}`
         );
         setItem(data);
       } catch (error) {
@@ -61,10 +63,7 @@ export default function EquipmentDetailPage() {
             <strong>Status:</strong> {item.status}
           </p>
           <RequestBorrowDialog equipmentItemId={item.id}>
-            <Button
-              className="mt-4"
-              disabled={item.status !== "Available"}
-            >
+            <Button className="mt-4" disabled={item.status !== "Available"}>
               Request to Borrow
             </Button>
           </RequestBorrowDialog>

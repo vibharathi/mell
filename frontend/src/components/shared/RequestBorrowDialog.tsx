@@ -66,17 +66,22 @@ export function RequestBorrowDialog({
     if (!token || !returnDate) return;
 
     try {
-      await fetchWithAuth("http://127.0.0.1:8000/api/v1/borrow-requests", {
-        method: "POST",
-        body: JSON.stringify({
-          equipment_item_id: equipmentItemId,
-          borrower_name: borrowerName,
-          borrower_email: borrowerEmail,
-          borrower_phone: borrowerPhone,
-          request_details: requestDetails,
-          return_date: returnDate.toISOString(),
-        }),
-      });
+      await fetchWithAuth(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"
+        }/api/v1/borrow-requests`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            equipment_item_id: equipmentItemId,
+            borrower_name: borrowerName,
+            borrower_email: borrowerEmail,
+            borrower_phone: borrowerPhone,
+            request_details: requestDetails,
+            return_date: returnDate.toISOString(),
+          }),
+        }
+      );
       setMessage("Your request has been submitted successfully.");
       setMessageType("success");
     } catch (error) {
@@ -173,7 +178,9 @@ export function RequestBorrowDialog({
             </div>
             <Button
               onClick={handleSubmit}
-              disabled={!returnDate || !borrowerName || !borrowerEmail || !borrowerPhone}
+              disabled={
+                !returnDate || !borrowerName || !borrowerEmail || !borrowerPhone
+              }
             >
               Submit Request
             </Button>
