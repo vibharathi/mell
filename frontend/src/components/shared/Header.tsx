@@ -10,8 +10,14 @@ export default function Header() {
 
   return (
     <header className="flex items-center justify-between p-4 border-b">
-      <Link href="/" className="text-2xl font-bold">
-        MELL
+      <Link href="/" className="flex items-center gap-2">
+        <img src="/mell_logo.png" alt="MELL Logo" className="w-10 h-10" />
+        <div>
+          <div className="text-2xl font-bold">MELL</div>
+          <div className="text-sm text-gray-500">
+            Medical Equipment Lending Library
+          </div>
+        </div>
       </Link>
       <nav>
         {authContext?.user ? (
