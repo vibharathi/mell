@@ -23,7 +23,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Header from "@/components/shared/Header";
 import Link from "next/link";
 
 const formSchema = z.object({
@@ -72,7 +71,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
       <div className="flex-1 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader>

@@ -15,13 +15,12 @@ export default function Home() {
                 Connecting Communities Through{" "}
                 <span className="text-primary">Medical Equipment</span> Sharing
               </h1>
-              <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                A platform for community members to borrow and manage medical
-                equipment.
+              <p className="mx-auto text-gray-500 md:text-xl dark:text-gray-400">
+                A platform for community members to borrow and manage medical equipment.
               </p>
               <div className="space-x-4">
-                <Link href="/register">
-                  <Button>Get Started</Button>
+                <Link href="/equipment">
+                  <Button>Browse Equipment</Button>
                 </Link>
                 <Button variant="secondary">Learn More</Button>
               </div>

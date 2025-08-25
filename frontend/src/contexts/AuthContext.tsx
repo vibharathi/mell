@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');
-    router.push('/login');
+    router.push('/');
   }, [router]);
 
   const fetchUserProfile = useCallback(async (token: string) => {
